@@ -1,22 +1,35 @@
 
 #include <iostream>
+#include "serialstream.h"
 #include "TimeData.h"
+#include "Run.h"
+#include <boost/asio.hpp>
 
+using namespace std;
 
 int main(void)
 {
 
-	TimeData times = { 00, 32 , 22, 24 };
+	TimeData times = { 00, 32 , 19, 24 };
 
+	SerialOptions options;
+	options.setDevice("COM3");
+	options.setBaudrate(115200);
+	options.setTimeout(boost::posix_time::seconds(10));
 
-	if (!times.CheckTime(times.beginHours, times.beginMins, times.endHours, times.endMins)) {
+	SerialStream serial(options);
+	serial.exceptions(ios::badbit | ios::failbit); //Important!
 
+	//simulate a populated serial
+	serial << "Hello world" << endl;
 
-		std::cout << "Time is not valid" << std::endl;
-		return 0;
-
-	};
-
-	std::cout << "Time is valid" << std::endl;
+	while (true) {
+		Run(serial, times);
+	}
 	return 0;
+
 }
+
+
+
+
