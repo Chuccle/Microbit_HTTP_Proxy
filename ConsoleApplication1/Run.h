@@ -2,4 +2,4 @@
 #include "serialstream.h"
 #include "TimeData.h"
 
-void Run(SerialStream& serial, TimeData& times);
+void Run(SerialStream& serial);

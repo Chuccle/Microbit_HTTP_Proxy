@@ -29,13 +29,13 @@
   <ItemGroup>
     <ClInclude Include="Run.h" />
     <ClInclude Include="serialstream.h" />
-    <ClInclude Include="TimeData.h" />
+    <ClInclude Include="Timedata.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleApplication1.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="serialstream.cpp" />
-    <ClCompile Include="TimeData.cpp" />
+    <ClCompile Include="Timedata.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

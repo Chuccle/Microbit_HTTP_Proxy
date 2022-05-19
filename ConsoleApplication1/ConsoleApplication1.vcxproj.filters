@@ -15,20 +15,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TimeData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="serialstream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Run.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Timedata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TimeData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ConsoleApplication1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -36,6 +33,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Program.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Timedata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

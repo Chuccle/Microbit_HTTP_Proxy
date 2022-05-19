@@ -114,6 +114,7 @@ SerialDeviceImpl::SerialDeviceImpl(const SerialOptions& options)
 	catch (std::exception& e)
 	{
 		throw ios::failure(e.what());
+
 	}
 }
 

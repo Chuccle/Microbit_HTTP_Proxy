@@ -7,91 +7,113 @@
 #include <string>
 
 
+
+struct Schedule {
+
+
+	time_t beginUnixTime;
+
+	//Will always be an additional day more
+	time_t endUnixTime;
+
+
+};
+
+
+//TODO Add function to update the begin and end times from database
+
+
+
+
+
 bool TimeData::CheckTime(int const& beginHours, int const& beginMins, int const& endHours, int const& endMins) {
 
 	//better to pass by reference and pointers here if we can simply because copying each parameter is going to be high in memory (long long being 8 bytes)
+	time_t currentUnixTime = time(0);
+	time_t beginUnixTime = 0;
+	time_t endUnixTime = 0;
 
-	//Make this a pointer since we don't want to be constantly copy and recalling for each condition
-	time_t* currentUnixTime = new time_t(time(0));
 
 	//instantiate tm class
 	struct tm currentTime;
 
 
 	//using address of our tm class, we take in the current time ponter to populate it
-	localtime_s(&currentTime, currentUnixTime);
+	localtime_s(&currentTime, &currentUnixTime);
+
+	currentTime.tm_sec = 00;
+
+	currentTime.tm_min = beginMins;
+	currentTime.tm_hour = beginHours;
+
+	beginUnixTime = _mktime64(&currentTime);
+
+	currentTime.tm_min = endMins;
+	currentTime.tm_hour = endHours;
+
+	endUnixTime = _mktime64(&currentTime);
+
+	
+	static Schedule Current = { beginUnixTime - 86400, endUnixTime };
+	static Schedule Next = { beginUnixTime,  endUnixTime + 86400 };
 
 
-	int TotalSec1, TotalSec2, CurrentSec;
-
-	TotalSec1 = (beginHours * 3600) + (beginMins * 60);
-
-	TotalSec2 = (endHours * 3600) + (endMins * 60);
-
-	CurrentSec = (currentTime.tm_hour * 3600) + (currentTime.tm_min * 60);
 
 
-	if (beginHours < endHours) {
+	if (beginHours <= endHours) {
 
-		if (!(CurrentSec >= TotalSec1 && CurrentSec <= TotalSec2))
+		std::cout << beginUnixTime << "\n";;
+		std::cout << currentUnixTime << "\n";;
+		std::cout << endUnixTime << "\n";
+
+		if (currentUnixTime >= beginUnixTime && currentUnixTime <= endUnixTime)
 		{
 
-			std::cout << "outside of range in option 1" << "\n";
+			std::cout << "inside of range in option 1" << "\n";
 
-			currentUnixTime = NULL;
 
-			delete currentUnixTime;
-
-			return false;
+			return true;
 
 		}
 
 
 	}
+
 	else if (beginHours > endHours) {
 
+		//remove a day from the calculated time or the LB of my range will be too high
+		//find diffence in seconds, divide into 2, add to lb and ub
 
-		TotalSec2 += 86400;
-		CurrentSec += 86400;
 
 
-		if (!(CurrentSec >= TotalSec1 && CurrentSec <= TotalSec2))
-		{
+		if (currentUnixTime >= Current.endUnixTime) {
 
-			std::cout << "outside of range in option 2" << "\n";
+			std::cout << "swapping times" << "\n";
 
-			currentUnixTime = NULL;
 
-			delete currentUnixTime;
+			Current = Next;
 
-			return false;
+			Next.beginUnixTime += 86400;
+
+			Next.endUnixTime += (86400 * 2);
+
 
 		}
 
 
 
-	}
-	else {
+		// if currenttime is more than current.end and less than next.begin
 
-		std::cout << "ranges are equal" << "\n";
+		if (currentUnixTime >= Current.beginUnixTime && currentUnixTime <= Current.endUnixTime) {
 
-		currentUnixTime = NULL;
+			std::cout << "inside of range in option 2" << "\n";
+			return true;
 
-		delete currentUnixTime;
+		}
 
 		return false;
 
 	}
 
-
-	currentUnixTime = NULL;
-
-	delete currentUnixTime;
-
-	return true;
-
 }
-
-
-
 

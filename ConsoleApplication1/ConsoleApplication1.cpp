@@ -10,22 +10,23 @@ using namespace std;
 int main(void)
 {
 
-	TimeData times = { 00, 32 , 19, 24 };
 
+	//Initialise our objects...
+	//Default times
 	SerialOptions options;
-	options.setDevice("COM3");
+	options.setDevice("COM4");
 	options.setBaudrate(115200);
-	options.setTimeout(boost::posix_time::seconds(10));
+	options.setTimeout(boost::posix_time::seconds(2));
 
 	SerialStream serial(options);
 	serial.exceptions(ios::badbit | ios::failbit); //Important!
 
-	//simulate a populated serial
-	serial << "Hello world" << endl;
 
-	while (true) {
-		Run(serial, times);
-	}
+	while (true)
+		Run(serial);
+
+
+
 	return 0;
 
 }
