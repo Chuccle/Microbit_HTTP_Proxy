@@ -6,11 +6,11 @@ The app will also be able to update it's active time period from an HTTP request
 ## Configuration
 I've used three external libraries:
 
-## * [boost](https://github.com/boostorg/boost) 
+ * [boost](https://github.com/boostorg/boost) 
 
-## * [poco](https://github.com/pocoproject/poco) 
+ * [poco](https://github.com/pocoproject/poco) 
 
-## * [CPR](https://github.com/libcpr/cpr)
+* [CPR](https://github.com/libcpr/cpr)
 
 
 You will need to edit the device in `Microbit_HTTP_Proxy/ConsoleApplication1/ConsoleApplication1.cpp` to the port that that the device is connected to
