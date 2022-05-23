@@ -3,3 +3,4 @@
 #include "TimeData.h"
 
 void Run(SerialStream& serial);
+void SendEmail();

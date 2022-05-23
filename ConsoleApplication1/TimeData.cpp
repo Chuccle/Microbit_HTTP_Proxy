@@ -5,6 +5,12 @@
 #include <stdio.h>
 #include <sstream>
 #include <string>
+#include <boost/thread.hpp>
+#include <cpr/cpr.h>
+#include <sstream>
+#include <map>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 
 
@@ -20,15 +26,60 @@ struct Schedule {
 };
 
 
-//TODO Add function to update the begin and end times from database
+
+
+void TimeData::FetchTime(std::string const& DEVICEID_2) {
+
+	std::string bodySplit1 = R"({"p_microbit_id": ")";
+
+	std::string bodySplit2 = R"("})";
+
+	std::string body = bodySplit1 + DEVICEID_2 + bodySplit2;
+
+
+
+	// send request
+
+	auto r = cpr::Post(cpr::Url{ "https://warm-ravine-35986.herokuapp.com/updateschedule" },
+		cpr::Body{ body },
+		cpr::Header{ { "Content-Type", "application/json" } });
+
+
+	boost::property_tree::ptree pt;
+
+	std::istringstream is(r.text);
+
+	boost::property_tree::json_parser::read_json(is, pt);
+
+
+	beginHours = stoi(pt.get<std::string>("begin_hours"));
+	beginMins = stoi(pt.get<std::string>("begin_minutes"));
+	endHours = stoi(pt.get<std::string>("end_hours"));
+	endMins = stoi(pt.get<std::string>("end_minutes"));
+
+
+
+};
 
 
 
 
+bool TimeData::CheckTime(std::string const& DEVICEID) {
 
-bool TimeData::CheckTime(int const& beginHours, int const& beginMins, int const& endHours, int const& endMins) {
+
+	FetchTime(DEVICEID);
+
+
+	if (beginHours == endHours && beginMins == endMins) {
+
+		return true;
+
+	}
+
+
 
 	//better to pass by reference and pointers here if we can simply because copying each parameter is going to be high in memory (long long being 8 bytes)
+
 	time_t currentUnixTime = time(0);
 	time_t beginUnixTime = 0;
 	time_t endUnixTime = 0;
@@ -53,67 +104,19 @@ bool TimeData::CheckTime(int const& beginHours, int const& beginMins, int const&
 
 	endUnixTime = _mktime64(&currentTime);
 
-	
-	static Schedule Current = { beginUnixTime - 86400, endUnixTime };
-	static Schedule Next = { beginUnixTime,  endUnixTime + 86400 };
-
 
 
 
 	if (beginHours <= endHours) {
 
-		std::cout << beginUnixTime << "\n";;
-		std::cout << currentUnixTime << "\n";;
-		std::cout << endUnixTime << "\n";
-
-		if (currentUnixTime >= beginUnixTime && currentUnixTime <= endUnixTime)
-		{
-
-			std::cout << "inside of range in option 1" << "\n";
-
-
-			return true;
-
-		}
-
+		return (currentUnixTime >= beginUnixTime && currentUnixTime <= endUnixTime);
 
 	}
 
 	else if (beginHours > endHours) {
 
-		//remove a day from the calculated time or the LB of my range will be too high
-		//find diffence in seconds, divide into 2, add to lb and ub
-
-
-
-		if (currentUnixTime >= Current.endUnixTime) {
-
-			std::cout << "swapping times" << "\n";
-
-
-			Current = Next;
-
-			Next.beginUnixTime += 86400;
-
-			Next.endUnixTime += (86400 * 2);
-
-
-		}
-
-
-
-		// if currenttime is more than current.end and less than next.begin
-
-		if (currentUnixTime >= Current.beginUnixTime && currentUnixTime <= Current.endUnixTime) {
-
-			std::cout << "inside of range in option 2" << "\n";
-			return true;
-
-		}
-
-		return false;
+		return (currentUnixTime >= beginUnixTime || currentUnixTime <= endUnixTime);
 
 	}
 
 }
-

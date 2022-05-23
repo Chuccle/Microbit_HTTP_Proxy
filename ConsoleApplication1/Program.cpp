@@ -11,6 +11,7 @@
 #include <socketapi.h>
 #include <boost/bind.hpp>
 #include "Run.h"
+#include <cpr/cpr.h>
 
 
 
@@ -21,10 +22,32 @@ using namespace boost;
 using namespace boost::posix_time;
 
 
+//const std::string DEVICEID = "EXAMPLE_DEVICE_HASH";
+const std::string  DEVICEID = "JOEMAMA";
 
-const std::string DEVICEID = "EXAMPLE_DEVICE_HASH";
 
 
+
+
+void SendEmail() {
+
+	std::string bodySplit1 = R"({"p_microbit_id": ")";
+
+	std::string bodySplit2 = R"("})";
+
+	std::string body = bodySplit1 + DEVICEID + bodySplit2;
+
+
+	// send request
+
+	auto r = cpr::Post(cpr::Url{ "https://warm-ravine-35986.herokuapp.com/email" },
+		cpr::Body{ body },
+		cpr::Header{ { "Content-Type", "application/json" } });
+
+	std::cout << "Returned Status: " << r.text << std::endl;
+
+
+}
 
 
 
@@ -32,15 +55,13 @@ const std::string DEVICEID = "EXAMPLE_DEVICE_HASH";
 void Run(SerialStream& serial) {
 
 
-	//Data sent needs to be in the format of: DAT: TRUE <\n> or 44 41 54 3a 20 54 72 75 65 0d 0a in hex. S
+
+	TimeData times;
 
 
-	TimeData times = { 17, 32 , 16, 46 };
 
 
-
-	if (!times.CheckTime(times.beginHours, times.beginMins, times.endHours, times.endMins)) {
-
+	if (!times.CheckTime(DEVICEID)) {
 
 		std::cout << "Time is not valid" << std::endl;
 		boost::this_thread::sleep(boost::posix_time::milliseconds(100));
@@ -52,6 +73,7 @@ void Run(SerialStream& serial) {
 
 
 
+	//Data sent needs to be in the format of: DAT: TRUE <\n> or 44 41 54 3a 20 54 72 75 65 0d 0a in hex. S
 
 	try {
 
@@ -63,33 +85,21 @@ void Run(SerialStream& serial) {
 		getline(serial, t_str);
 
 
-		if (t_str == "") {
+		if (t_str.empty()) {
 			std::cout << "empty" << std::endl;
 			return;
 
 		}
 
+
 		std::cout << t_str << std::endl;
-		//set this to the route inside our server which handles the email
-		//we also need to send the unique device ID to the server to identify the user
-		Poco::URI uri("https://www.google.com");
 
-		Poco::Net::HTTPClientSession session(uri.getHost(), uri.getPort());
 
-		std::string path(uri.getPathAndQuery());
+		SendEmail();
 
-		if (path.empty()) path = "/";
 
-		// send request
-		Poco::Net::HTTPRequest req(Poco::Net::HTTPRequest::HTTP_GET, path);
 
-		session.sendRequest(req);
 
-		Poco::Net::HTTPResponse res;
-
-		std::cout << "Response Status = " << res.getStatus() << std::endl;
-
-		std::cout << "Response Reason = " << res.getReason() << std::endl;
 
 		Poco::Thread::sleep(10000);
 
@@ -102,4 +112,8 @@ void Run(SerialStream& serial) {
 		std::cerr << "Timeout occurred" << std::endl;
 
 	}
+
+
 }
+
+
