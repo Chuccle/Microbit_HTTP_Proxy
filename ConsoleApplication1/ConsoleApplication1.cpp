@@ -1,22 +1,27 @@
-
-#include <iostream>
-#include "TimeData.h"
+#include "serialstream.h"
+#include "Run.h"
 
 
 int main(void)
 {
 
-	TimeData times = { 00, 32 , 22, 24 };
+	//Initialise our objects...
+	//Default times
+	SerialOptions options;
+	options.setDevice("COM4");
+	options.setBaudrate(115200);
+	options.setTimeout(boost::posix_time::seconds(2));
 
+	SerialStream serial(options);
+	serial.exceptions(std::ios::badbit | std::ios::failbit); //Important!
 
-	if (!times.CheckTime(times.beginHours, times.beginMins, times.endHours, times.endMins)) {
+	while (true)
+		Run(serial);
 
-
-		std::cout << "Time is not valid" << std::endl;
-		return 0;
-
-	};
-
-	std::cout << "Time is valid" << std::endl;
 	return 0;
+
 }
+
+
+
+

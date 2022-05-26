@@ -1,6 +1,6 @@
 #pragma once
 
-#include <time.h>
+#include <string>
 
 
 class TimeData
@@ -12,7 +12,14 @@ public:
 
 public:
 
-	bool CheckTime(int const& beginHours, int const& beginMins, int const& endHours, int const& endMins);
+	bool CheckTime(std::string const& DEVICEID);
+
+private:
+
+	void FetchTime(std::string const& DEVICEID_2);
+
 
 };
+
+
 
