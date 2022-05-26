@@ -1,40 +1,16 @@
-
 #include <iostream>
-
-#include <Poco/Net/HTTPClientSession.h>
-#include <Poco/Net/HTTPRequest.h>
-#include <Poco/Net/HTTPResponse.h>
-#include <Poco/Path.h>
-#include <Poco/URI.h>
-#include <boost/thread.hpp>
-#include <boost/asio.hpp>
-#include <socketapi.h>
-#include <boost/bind.hpp>
 #include "Run.h"
 #include <cpr/cpr.h>
-
-
-
-using namespace boost::asio;
-
-using namespace boost;
-
-using namespace boost::posix_time;
+#include <Poco/Thread.h>
 
 
 //const std::string DEVICEID = "EXAMPLE_DEVICE_HASH";
 const std::string  DEVICEID = "JOEMAMA";
 
-
-
-
-
 void SendEmail() {
 
 	std::string bodySplit1 = R"({"p_microbit_id": ")";
-
 	std::string bodySplit2 = R"("})";
-
 	std::string body = bodySplit1 + DEVICEID + bodySplit2;
 
 
@@ -50,21 +26,16 @@ void SendEmail() {
 }
 
 
-
-
 void Run(SerialStream& serial) {
-
 
 
 	TimeData times;
 
 
-
-
 	if (!times.CheckTime(DEVICEID)) {
 
 		std::cout << "Time is not valid" << std::endl;
-		boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+		Poco::Thread::sleep(100);
 		return;
 
 	};
@@ -96,9 +67,6 @@ void Run(SerialStream& serial) {
 
 
 		SendEmail();
-
-
-
 
 
 		Poco::Thread::sleep(10000);

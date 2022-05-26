@@ -1,14 +1,8 @@
-
 #include "TimeData.h"
 #include "iostream"
-#include <stdlib.h>
 #include <stdio.h>
 #include <sstream>
-#include <string>
-#include <boost/thread.hpp>
 #include <cpr/cpr.h>
-#include <sstream>
-#include <map>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
@@ -16,16 +10,12 @@
 
 struct Schedule {
 
-
 	time_t beginUnixTime;
 
 	//Will always be an additional day more
 	time_t endUnixTime;
 
-
 };
-
-
 
 
 void TimeData::FetchTime(std::string const& DEVICEID_2) {
@@ -35,7 +25,6 @@ void TimeData::FetchTime(std::string const& DEVICEID_2) {
 	std::string bodySplit2 = R"("})";
 
 	std::string body = bodySplit1 + DEVICEID_2 + bodySplit2;
-
 
 
 	// send request
@@ -57,11 +46,7 @@ void TimeData::FetchTime(std::string const& DEVICEID_2) {
 	endHours = stoi(pt.get<std::string>("end_hours"));
 	endMins = stoi(pt.get<std::string>("end_minutes"));
 
-
-
 };
-
-
 
 
 bool TimeData::CheckTime(std::string const& DEVICEID) {
@@ -75,7 +60,6 @@ bool TimeData::CheckTime(std::string const& DEVICEID) {
 		return true;
 
 	}
-
 
 
 	//better to pass by reference and pointers here if we can simply because copying each parameter is going to be high in memory (long long being 8 bytes)
@@ -103,8 +87,6 @@ bool TimeData::CheckTime(std::string const& DEVICEID) {
 	currentTime.tm_hour = endHours;
 
 	endUnixTime = _mktime64(&currentTime);
-
-
 
 
 	if (beginHours <= endHours) {

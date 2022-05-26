@@ -1,19 +1,9 @@
-
-#include <iostream>
 #include "serialstream.h"
-#include "TimeData.h"
 #include "Run.h"
-#include <boost/asio.hpp>
 
-
-
-
-
-using namespace std;
 
 int main(void)
 {
-
 
 	//Initialise our objects...
 	//Default times
@@ -23,13 +13,10 @@ int main(void)
 	options.setTimeout(boost::posix_time::seconds(2));
 
 	SerialStream serial(options);
-	serial.exceptions(ios::badbit | ios::failbit); //Important!
-
+	serial.exceptions(std::ios::badbit | std::ios::failbit); //Important!
 
 	while (true)
 		Run(serial);
-
-
 
 	return 0;
 
