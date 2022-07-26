@@ -8,16 +8,12 @@ class TimeData
 
 public:
 
-	int beginHours, beginMins, endHours, endMins;
-
-public:
-
 	bool CheckTime(std::string const& DEVICEID);
 
 private:
 
 	void FetchTime(std::string const& DEVICEID_2);
-
+	int beginHours, beginMins, endHours, endMins;
 
 };
 

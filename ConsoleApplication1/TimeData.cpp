@@ -7,17 +7,6 @@
 #include <boost/property_tree/json_parser.hpp>
 
 
-
-struct Schedule {
-
-	time_t beginUnixTime;
-
-	//Will always be an additional day more
-	time_t endUnixTime;
-
-};
-
-
 void TimeData::FetchTime(std::string const& DEVICEID_2) {
 
 	std::string bodySplit1 = R"({"p_microbit_id": ")";

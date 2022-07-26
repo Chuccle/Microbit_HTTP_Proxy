@@ -5,7 +5,8 @@
 
 
 //const std::string DEVICEID = "EXAMPLE_DEVICE_HASH";
-const std::string  DEVICEID = "JOEMAMA";
+// use ENV?
+const std::string  DEVICEID = "default";
 
 void SendEmail() {
 
